@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import os
 import time
 from selenium import webdriver
@@ -9,7 +10,9 @@ from selenium.webdriver.common.by import By
 
 def driver():
     options = Options()
-    headless = os.environ['SELENIUM_HEADLESS'].upper()
+    headless = 'TRUE'
+    if "SELENIUM_HEADLESS" in os.environ:
+        headless = os.environ['SELENIUM_HEADLESS'].upper()
     if headless != 'FALSE':
         options.add_argument("--headless")
     options.add_argument("--incognito")

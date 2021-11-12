@@ -46,3 +46,19 @@ export STACKOVERFLOW_PASSWORD=your_password
 export SELENIUM_HEADLESS=False
 python login.py
 ```
+
+## Docker
+
+Build image:
+```bash
+docker build -t selenium-stackoverflow .
+```
+
+Execute image:
+```bash
+docker run -e STACKOVERFLOW_EMAIL=your_email@your_domain.com \
+  -e STACKOVERFLOW_PASSWORD=your_password \
+  selenium-stackoverflow
+```
+
+
