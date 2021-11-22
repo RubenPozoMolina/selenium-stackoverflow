@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import os
 import time
 from selenium import webdriver
@@ -9,7 +10,9 @@ from selenium.webdriver.common.by import By
 
 def driver():
     options = Options()
-    headless = os.environ['SELENIUM_HEADLESS'].upper()
+    headless = 'TRUE'
+    if "SELENIUM_HEADLESS" in os.environ:
+        headless = os.environ['SELENIUM_HEADLESS'].upper()
     if headless != 'FALSE':
         options.add_argument("--headless")
     options.add_argument("--incognito")
@@ -28,24 +31,26 @@ def driver():
 
 
 def main():
-    local_driver = driver()
-    local_driver.get('https://stackoverflow.com')
-    wait = WebDriverWait(local_driver, int(10))
-    log_in_button = wait.until(
-        expected_conditions.visibility_of_element_located((By.XPATH, '/html/body/header/div/ol[2]/li[2]/a[1]'))
-    )
-    log_in_button.click()
-    email = wait.until(expected_conditions.visibility_of_element_located((By.ID, 'email')))
-    email.send_keys(os.environ['STACKOVERFLOW_EMAIL'])
-    password = wait.until(expected_conditions.visibility_of_element_located((By.ID, 'password')))
-    password.send_keys(os.environ['STACKOVERFLOW_PASSWORD'])
-    submit_button = wait.until(expected_conditions.visibility_of_element_located((By.ID, 'submit-button')))
-    submit_button.click()
-    avatar = wait.until(expected_conditions.element_to_be_clickable((By.XPATH, '/html/body/header/div/ol[2]/li[2]/a/div[1]/img')))
-    avatar.click()
-    user_name = wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//*[@id="mainbar-full"]/div[1]/div[1]/div/div[1]/div[1]')))
-    print('User name:', user_name.text)
-    time.sleep(1)
-
+    try:
+        local_driver = driver()
+        local_driver.get('https://stackoverflow.com')
+        wait = WebDriverWait(local_driver, int(10))
+        log_in_button = wait.until(
+            expected_conditions.visibility_of_element_located((By.XPATH, '/html/body/header/div/ol[2]/li[2]/a[1]'))
+        )
+        log_in_button.click()
+        email = wait.until(expected_conditions.visibility_of_element_located((By.ID, 'email')))
+        email.send_keys(os.environ['STACKOVERFLOW_EMAIL'])
+        password = wait.until(expected_conditions.visibility_of_element_located((By.ID, 'password')))
+        password.send_keys(os.environ['STACKOVERFLOW_PASSWORD'])
+        submit_button = wait.until(expected_conditions.visibility_of_element_located((By.ID, 'submit-button')))
+        submit_button.click()
+        avatar = wait.until(expected_conditions.element_to_be_clickable((By.XPATH, '/html/body/header/div/ol[2]/li[2]/a/div[1]/img')))
+        avatar.click()
+        user_name = wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//*[@id="mainbar-full"]/div[1]/div[1]/div/div[1]/div[1]')))
+        print('User name:', user_name.text)
+        time.sleep(1)
+    except Exception as e:
+        print('Exception:', str(e))
 
 main()
